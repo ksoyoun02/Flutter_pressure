@@ -1,24 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:pressure_flutter/screens/pressure/pressure_save.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int _selectedTabIndex = 0;
+
+  final List<String> _headerTitles = [
+    'Header for Tab 1',
+    'Header for Tab 2',
+    'Header for Tab 3',
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
         children: [
-          // Main Header
           Container(
-            height: MediaQuery.of(context).size.height * 0.1, // 10% of the screen height
+            height: MediaQuery.of(context).size.height * 0.1,
             color: Colors.blue,
             alignment: Alignment.center,
-            child: Text(
-              'Main Header',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 25.0),
+              child: Text(
+                _headerTitles[_selectedTabIndex],
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
@@ -36,6 +52,11 @@ class HomeScreen extends StatelessWidget {
                       labelColor: Colors.blue,
                       unselectedLabelColor: Colors.grey,
                       indicatorColor: Colors.blue,
+                      onTap: (index) {
+                        setState(() {
+                          _selectedTabIndex = index;
+                        });
+                      },
                       tabs: [
                         Tab(text: 'Tab 1'),
                         Tab(text: 'Tab 2'),
@@ -48,7 +69,7 @@ class HomeScreen extends StatelessWidget {
                   Expanded(
                     child: TabBarView(
                       children: [
-                        Center(child: Text('Content for Tab 1')),
+                        const PressureSave(),
                         Center(child: Text('Content for Tab 2')),
                         Center(child: Text('Content for Tab 3')),
                       ],
