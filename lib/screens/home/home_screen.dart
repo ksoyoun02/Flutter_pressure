@@ -58,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         });
                       },
                       tabs: [
-                        Tab(text: 'Tab 1'),
+                        Tab(text: 'Tab 12'),
                         Tab(text: 'Tab 2'),
                         Tab(text: 'Tab 3'),
                       ],
