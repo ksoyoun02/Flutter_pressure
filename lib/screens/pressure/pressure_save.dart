@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pressure_flutter/screens/pressure/pressure_dropdown.dart';
 
 class PressureSave extends StatefulWidget {
   const PressureSave({super.key});
@@ -9,90 +8,70 @@ class PressureSave extends StatefulWidget {
 }
 
 class _PressureSaveState extends State<PressureSave> {
-  double _currentSystolic = 120; // 수축기 혈압
-  double _currentDiastolic = 80; // 이완기 혈압
-  double _currentPulse = 70; // 맥박
+  double _currentSystolic = 120;
+  double _currentDiastolic = 80;
+  double _currentPulse = 70;
 
-  final List<int> systolicRange =
-      List.generate(111, (index) => 90 + index); // 90~200
-  final List<int> diastolicRange =
-      List.generate(61, (index) => 60 + index); // 60~120
-  final List<int> pulseRange =
-      List.generate(111, (index) => 40 + index); // 40~150
-
-  void _showComboBoxModal() {
+  final List<int> systolicRange = List.generate(111, (index) => 90 + index);
+  final List<int> diastolicRange = List.generate(61, (index) => 60 + index);
+  final List<int> pulseRange = List.generate(111, (index) => 40 + index);
+  void _showWheelPicker(BuildContext context, String label, double currentValue,
+      List<int> values, ValueChanged<int> onSelected) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          //title: const Text("항목 선택"),
-          content: Padding(
-            padding: const EdgeInsets.only(right: 17.0, left: 17.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text("수축기 혈압", style: TextStyle(fontSize: 18)),
-                    PressureDropdown(
-                      value: _currentSystolic.toInt(),
-                      items: systolicRange,
-                      onChanged: (int? newValue) {
-                        setState(
-                          () {
-                            _currentSystolic = newValue!.toDouble();
-                          },
-                        );
-                      },
-                    )
-                  ],
+        int selectedIndex = values.indexOf(currentValue.toInt());
+
+        return StatefulBuilder(
+          // StatefulBuilder 사용
+          builder: (context, setState) {
+            return AlertDialog(
+              title: Text(label),
+              content: SizedBox(
+                height: 150,
+                child: ListWheelScrollView.useDelegate(
+                  controller:
+                      FixedExtentScrollController(initialItem: selectedIndex),
+                  itemExtent: 40.0,
+                  physics: const FixedExtentScrollPhysics(),
+                  onSelectedItemChanged: (int index) {
+                    setState(() {
+                      selectedIndex = index; // 실시간으로 selectedIndex 업데이트
+                    });
+                    onSelected(values[index]);
+                  },
+                  childDelegate: ListWheelChildBuilderDelegate(
+                    builder: (context, index) {
+                      return Center(
+                        child: Text(
+                          values[index].toString(),
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold, // 글자 두께 설정
+                            color: index == selectedIndex
+                                ? Colors.blue
+                                : Colors.black, // 선택된 항목에 색상 다르게
+                          ),
+                        ),
+                      );
+                    },
+                    childCount: values.length,
+                  ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text("이완기 혈압", style: TextStyle(fontSize: 18)),
-                    PressureDropdown(
-                      value: _currentDiastolic.toInt(),
-                      items: diastolicRange,
-                      onChanged: (int? newValue) {
-                        setState(
-                          () {
-                            _currentDiastolic = newValue!.toDouble();
-                          },
-                        );
-                      },
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text("맥박", style: TextStyle(fontSize: 18)),
-                    PressureDropdown(
-                      value: _currentPulse.toInt(),
-                      items: pulseRange,
-                      onChanged: (int? newValue) {
-                        setState(
-                          () {
-                            _currentPulse = newValue!.toDouble();
-                          },
-                        );
-                      },
-                    ),
-                  ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text("완료",
+                      style: TextStyle(fontSize: 18, color: Colors.blue)),
                 ),
               ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text("닫기"),
-            ),
-          ],
+              backgroundColor: Colors.white, // 다이얼로그 배경 색상
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12), // 다이얼로그 모서리 둥글게
+              ),
+            );
+          },
         );
       },
     );
@@ -103,31 +82,46 @@ class _PressureSaveState extends State<PressureSave> {
     return Scaffold(
       body: Column(
         children: [
-          Expanded(
-            flex: 4,
+          const SizedBox(height: 50),
+          _buildPickerRow("수축기 혈압", _currentSystolic, systolicRange, (value) {
+            setState(() {
+              _currentSystolic = value.toDouble();
+            });
+          }),
+          _buildPickerRow("이완기 혈압", _currentDiastolic, diastolicRange, (value) {
+            setState(() {
+              _currentDiastolic = value.toDouble();
+            });
+          }),
+          _buildPickerRow("맥박", _currentPulse, pulseRange, (value) {
+            setState(() {
+              _currentPulse = value.toDouble();
+            });
+          }),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPickerRow(String label, double value, List<int> values,
+      ValueChanged<int> onSelected) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label, style: const TextStyle(fontSize: 18)),
+          GestureDetector(
+            onTap: () =>
+                _showWheelPicker(context, label, value, values, onSelected),
             child: Container(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    _currentSystolic.toStringAsFixed(0), // 소수점 한 자리까지 출력
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  Text(
-                    _currentDiastolic.toStringAsFixed(0), // 소수점 한 자리까지 출력
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  Text(
-                    _currentPulse.toStringAsFixed(0), // 소수점 한 자리까지 출력
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  ElevatedButton(
-                    onPressed: _showComboBoxModal,
-                    child: const Text('모달 열기 (3개 숫자 콤보박스)'),
-                  ),
-                ],
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(8),
               ),
+              child: Text(value.toInt().toString(),
+                  style: const TextStyle(fontSize: 18)),
             ),
           ),
         ],
