@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pressure_flutter/screens/pressure/pressure_save.dart';
+import 'package:pressure_flutter/screens/pressure/pressure_main.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -58,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         });
                       },
                       tabs: [
-                        Tab(text: 'Tab 12'),
+                        Tab(text: 'Tab 1'),
                         Tab(text: 'Tab 2'),
                         Tab(text: 'Tab 3'),
                       ],
