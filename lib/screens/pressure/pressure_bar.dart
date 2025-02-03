@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
-class MovingBarWidget extends StatelessWidget {
+class MovingBarWidget extends StatefulWidget {
   final double sp;
   final double dp;
   final double min;
   final double max;
   final double barWidth;
+  final Function(int) onValueChanged;
 
   const MovingBarWidget({
     super.key,
@@ -14,126 +15,131 @@ class MovingBarWidget extends StatelessWidget {
     this.min = 50,
     this.max = 200,
     this.barWidth = 400,
+    required this.onValueChanged,
   });
 
-  String getBloodPressureCategory(double sp, double dp) {
-    if (sp <= 90 || dp <= 60) {
-      return "저혈압";
-    } else if (sp < 120 && dp < 80) {
-      return "정상 혈압";
-    } else if ((sp >= 120 && sp <= 129) && dp < 80) {
-      return "주의 혈압";
-    } else if ((sp >= 130 && sp <= 139) || (dp >= 80 && dp <= 89)) {
-      return "고혈압 전단계";
-    } else if ((sp >= 140 && sp <= 159) || (dp >= 90 && dp <= 99)) {
-      return "고혈압 1기";
-    } else if (sp >= 160 || dp >= 100) {
-      return "고혈압 2기";
+  @override
+  State<MovingBarWidget> createState() => _MovingBarWidgetState();
+}
+
+class _MovingBarWidgetState extends State<MovingBarWidget> {
+  String bloodPressureCategory = "정상 혈압";
+  int pressureStatus = 2;
+
+  static const List<Color> colors = [
+    Colors.blue,
+    Color(0xFFB2DFDB), // 정상 혈압 (연한 초록)
+    Color(0xFFFFF176), // 주의 혈압 (연한 노랑)
+    Color(0xFFFFA726), // 고혈압 전단계 (연한 주황)
+    Color(0xFFFFA3C2), // 고혈압 1기 (연한 핑크)
+    Color(0xFFFF5E6E), // 고혈압 2기 (강한 핑크)
+  ];
+
+  static const List<Map<String, dynamic>> pressureList = [
+    {"seq": 1, "label": "저혈압"},
+    {"seq": 2, "label": "정상 혈압"},
+    {"seq": 3, "label": "주의 혈압"},
+    {"seq": 4, "label": "고혈압 전단계"},
+    {"seq": 5, "label": "고혈압 1기"},
+    {"seq": 6, "label": "고혈압 2기"},
+    {"seq": 0, "label": "알 수 없음"},
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _updateBloodPressureCategory(widget.sp, widget.dp);
+  }
+
+  @override
+  void didUpdateWidget(covariant MovingBarWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.sp != widget.sp || oldWidget.dp != widget.dp) {
+      _updateBloodPressureCategory(widget.sp, widget.dp);
+      widget.onValueChanged(pressureStatus);
     }
-    return "알 수 없음";
+  }
+
+  void _updateBloodPressureCategory(double sp, double dp) {
+    int newStatus;
+    String newCategory;
+
+    if (sp <= 90 || dp <= 60) {
+      newStatus = 0;
+    } else if (sp < 120 && dp < 80) {
+      newStatus = 1;
+    } else if ((sp >= 120 && sp <= 129) && dp < 80) {
+      newStatus = 2;
+    } else if ((sp >= 130 && sp <= 139) || (dp >= 80 && dp <= 89)) {
+      newStatus = 3;
+    } else if ((sp >= 140 && sp <= 159) || (dp >= 90 && dp <= 99)) {
+      newStatus = 4;
+    } else if (sp >= 160 || dp >= 100) {
+      newStatus = 5;
+    } else {
+      newStatus = 6;
+    }
+
+    newCategory = pressureList[newStatus]["label"];
+
+    if (pressureStatus != newStatus) {
+      setState(() {
+        pressureStatus = newStatus;
+        bloodPressureCategory = newCategory;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    double arrowPosition = ((sp - min) / (max - min)) * barWidth;
-
-    return Container(
-      child: Column(
-        children: [
-          Stack(
-            children: [
-              // 3구역으로 나눈 막대 바
-              Row(
-                children: [
-                  Expanded(
-                    flex: 1, // 첫 번째 구역
-                    child: Container(
-                      height: 35,
-                      decoration: BoxDecoration(
-                        color: Colors.green.withOpacity(0.3),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(10),
-                          bottomLeft: Radius.circular(10),
-                        ),
-                      ),
+    return Column(
+      children: [
+        Stack(
+          children: [
+            // 색상 바
+            Row(
+              children: List.generate(colors.length, (index) {
+                return Expanded(
+                  child: Container(
+                    height: 25,
+                    decoration: BoxDecoration(
+                      color: colors[index],
+                      borderRadius: index == 0
+                          ? const BorderRadius.horizontal(
+                              left: Radius.circular(10))
+                          : index == colors.length - 1
+                              ? const BorderRadius.horizontal(
+                                  right: Radius.circular(10))
+                              : null,
                     ),
                   ),
-                  Expanded(
-                    flex: 1, // 두 번째 구역
-                    child: Container(
-                      height: 35,
-                      decoration: BoxDecoration(
-                        color: Colors.blue.withOpacity(0.3),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 1, // 세 번째 구역
-                    child: Container(
-                      height: 35,
-                      decoration: BoxDecoration(
-                        color: Colors.red.withOpacity(0.3),
-                        borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(10),
-                          bottomRight: Radius.circular(10),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                );
+              }),
+            ),
+            // 눈금 표시
+            Positioned.fill(
+              child: Row(
+                children: List.generate(colors.length, (index) {
+                  return Expanded(
+                    child: index == pressureStatus
+                        ? Align(
+                            alignment: Alignment.topCenter,
+                            child: Container(
+                                width: 2, height: 15, color: Colors.black),
+                          )
+                        : const SizedBox.shrink(),
+                  );
+                }),
               ),
-              // 눈금 & 숫자 표시
-              Positioned.fill(
-                child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    double barWidth = constraints.maxWidth;
-                    int divisions = 14; // 눈금 개수
-                    double step = barWidth / divisions;
-                    double minValue = 60;
-                    double maxValue = 200;
-                    double stepValue =
-                        (maxValue - minValue) / divisions; // 값 증가 단위
-
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: List.generate(divisions + 1, (index) {
-                        return Column(
-                          children: [
-                            Container(
-                              width: 2,
-                              height: 10,
-                              color: Colors.black26, // 눈금 선
-                            ),
-                            SizedBox(height: 2),
-                            Text(
-                              '${(minValue + (index * stepValue)).toInt()}', // 60, 74, 88 ... 200
-                              style: TextStyle(fontSize: 12),
-                            ),
-                          ],
-                        );
-                      }),
-                    );
-                  },
-                ),
-              ),
-              // 화살표 위치
-              Positioned(
-                left: arrowPosition - 10, // 중앙 정렬을 위해 조정
-                top: -19,
-                child: Column(
-                  children: [
-                    Icon(Icons.arrow_drop_down, size: 40, color: Colors.red),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          Text(
-            getBloodPressureCategory(sp, dp),
-            style: TextStyle(fontSize: 20, color: Colors.black),
-          ),
-        ],
-      ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 5),
+        Text(
+          bloodPressureCategory,
+          style: const TextStyle(fontSize: 15, color: Colors.black),
+        ),
+      ],
     );
   }
 }
