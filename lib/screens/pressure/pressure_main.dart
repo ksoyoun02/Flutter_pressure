@@ -139,22 +139,41 @@ class _PressureMainState extends State<PressureMain> {
               ),
             ],
           ),
+          Container(
+            height: 170,
+            margin: const EdgeInsets.only(
+              right: 15,
+              left: 15,
+              top: 15,
+            ),
+            child: PressureSave(),
+          ),
+          Column(
+            children: [
+              Divider(
+                // 공간 분리용 밑줄
+                color: const Color.fromARGB(255, 163, 163, 163), // 색상
+                thickness: 1, // 두께
+                indent: 20, // 왼쪽 여백
+                endIndent: 20, // 오른쪽 여백
+              ),
+            ],
+          ),
           Expanded(
             flex: 1,
             child: Container(
-              margin: const EdgeInsets.only(right: 30, left: 30, bottom: 10),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.red),
+              height: 275,
+              margin: EdgeInsets.only(
+                top: 15,
+                left: MediaQuery.of(context).size.width * 0.04,
+                right: MediaQuery.of(context).size.width * 0.04,
+                bottom: MediaQuery.of(context).size.height * 0.03,
               ),
-              child: PressureSave(),
-            ),
-          ),
-          Expanded(
-            flex: 2,
-            child: Container(
-              margin: const EdgeInsets.only(right: 5, left: 5, bottom: 20),
               child: PressureRange(statusIndex: _pressureStatus),
             ),
+          ),
+          SizedBox(
+            height: 16,
           )
         ],
       ),

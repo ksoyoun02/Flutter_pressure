@@ -83,11 +83,11 @@ class PressureRange extends StatelessWidget {
             bottom: BorderSide.none, // 테이블 하단 테두리 비활성화
           ),
           columnWidths: {
-            0: FixedColumnWidth(40), // 첫 번째 열 너비
-            1: FixedColumnWidth(90), // 첫 번째 열 너비
-            2: FixedColumnWidth(80), // 세 번째 열 너비
-            3: FixedColumnWidth(60), // 세 번째 열 너비
-            4: FixedColumnWidth(80), // 세 번째 열 너비
+            0: FlexColumnWidth(0.8), // 아이콘 칸 (작게)
+            1: FlexColumnWidth(2), // 혈압 상태
+            2: FlexColumnWidth(1.8), // 수축기 혈압
+            3: FlexColumnWidth(1.5), // 중간 빈 칸
+            4: FlexColumnWidth(1.8), // 이완기 혈압
           },
           children: [
             TableRow(
