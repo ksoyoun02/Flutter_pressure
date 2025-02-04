@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 void showWheelPicker(
   BuildContext context,
   String label,
-  double currentValue,
+  int currentValue,
   List<int> values,
   ValueChanged<int> onSelected,
 ) {

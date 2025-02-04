@@ -12,9 +12,9 @@ class PressureMain extends StatefulWidget {
 }
 
 class _PressureMainState extends State<PressureMain> {
-  double _currentSystolic = 120;
-  double _currentDiastolic = 80;
-  double _currentPulse = 70;
+  int _currentSystolic = 120;
+  int _currentDiastolic = 80;
+  int _currentPulse = 70;
   int _pressureStatus = 0;
 
   final List<int> systolicRange = List.generate(111, (index) => 90 + index);
@@ -102,7 +102,7 @@ class _PressureMainState extends State<PressureMain> {
                 values: systolicRange,
                 onSelected: (value) {
                   setState(() {
-                    _currentSystolic = value.toDouble();
+                    _currentSystolic = value.toInt();
                   });
                 },
               ),
@@ -112,7 +112,7 @@ class _PressureMainState extends State<PressureMain> {
                 values: diastolicRange,
                 onSelected: (value) {
                   setState(() {
-                    _currentDiastolic = value.toDouble();
+                    _currentDiastolic = value.toInt();
                   });
                 },
               ),
@@ -122,7 +122,7 @@ class _PressureMainState extends State<PressureMain> {
                 values: pulseRange,
                 onSelected: (value) {
                   setState(() {
-                    _currentPulse = value.toDouble();
+                    _currentPulse = value.toInt();
                   });
                 },
               ),
@@ -140,13 +140,14 @@ class _PressureMainState extends State<PressureMain> {
             ],
           ),
           Container(
-            height: 170,
-            margin: const EdgeInsets.only(
-              right: 15,
-              left: 15,
-              top: 15,
-            ),
-            child: PressureSave(),
+            height: 147,
+            margin:
+                const EdgeInsets.only(right: 15, left: 15, top: 5, bottom: 5),
+            child: PressureSave(
+                currentSystolic: _currentSystolic,
+                currentDiastolic: _currentDiastolic,
+                currentPulse: _currentPulse,
+                pressureStatus: _pressureStatus),
           ),
           Column(
             children: [
@@ -164,10 +165,10 @@ class _PressureMainState extends State<PressureMain> {
             child: Container(
               height: 275,
               margin: EdgeInsets.only(
-                top: 15,
+                top: 5,
                 left: MediaQuery.of(context).size.width * 0.04,
                 right: MediaQuery.of(context).size.width * 0.04,
-                bottom: MediaQuery.of(context).size.height * 0.03,
+                bottom: MediaQuery.of(context).size.height * 0.01,
               ),
               child: PressureRange(statusIndex: _pressureStatus),
             ),

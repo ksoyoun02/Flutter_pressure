@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pressure_flutter/screens/pressure/pressure_list_main.dart';
 import 'package:pressure_flutter/screens/pressure/pressure_main.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -58,9 +59,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         });
                       },
                       tabs: [
-                        Tab(text: 'Tab 1'),
-                        Tab(text: 'Tab 2'),
-                        Tab(text: 'Tab 3'),
+                        Tab(text: '측정'),
+                        Tab(text: '기록'),
+                        Tab(text: '설정'),
                       ],
                     ),
                   ),
@@ -70,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: TabBarView(
                       children: [
                         const PressureMain(),
-                        Center(child: Text('Content for Tab 2')),
+                        const PressureListMain(),
                         Center(child: Text('Content for Tab 3')),
                       ],
                     ),

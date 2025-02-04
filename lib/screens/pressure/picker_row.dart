@@ -3,7 +3,7 @@ import 'pressure_picker.dart';
 
 class PickerRow extends StatelessWidget {
   final String label;
-  final double value;
+  final int value;
   final List<int> values;
   final ValueChanged<int> onSelected;
 

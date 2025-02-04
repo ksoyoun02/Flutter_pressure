@@ -84,7 +84,7 @@ class PressureRange extends StatelessWidget {
           ),
           columnWidths: {
             0: FlexColumnWidth(0.8), // 아이콘 칸 (작게)
-            1: FlexColumnWidth(2), // 혈압 상태
+            1: FlexColumnWidth(2.2), // 혈압 상태
             2: FlexColumnWidth(1.8), // 수축기 혈압
             3: FlexColumnWidth(1.5), // 중간 빈 칸
             4: FlexColumnWidth(1.8), // 이완기 혈압
@@ -95,25 +95,25 @@ class PressureRange extends StatelessWidget {
                   color: const Color.fromARGB(255, 225, 225, 228)),
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(6.0),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(6.0),
                   child: Text('혈압 상태',
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(6.0),
                   child: Text('수축기혈압',
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(6.0),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(6.0),
                   child: Text('이완기혈압',
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
@@ -132,35 +132,36 @@ class PressureRange extends StatelessWidget {
                 ),
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.symmetric(vertical: 4.0),
                     child: Icon(
                       pressureList[index]['icon'],
                       color: colors[index],
+                      size: 23,
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(6.0),
                     child: Text(
                       pressureList[index]['label'],
                       style: TextStyle(fontSize: 12),
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(6.0),
                     child: Text(
                       '${pressureList[index]['spRange']}',
                       style: TextStyle(fontSize: 12),
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(6.0),
                     child: Text(
                       '${pressureList[index]['temp']}',
                       style: TextStyle(fontSize: 12),
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(6.0),
                     child: Text(
                       '${pressureList[index]['dpRange']}',
                       style: TextStyle(fontSize: 12),

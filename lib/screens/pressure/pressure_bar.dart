@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 class MovingBarWidget extends StatefulWidget {
-  final double sp;
-  final double dp;
-  final double min;
-  final double max;
-  final double barWidth;
+  final int sp;
+  final int dp;
+  final int min;
+  final int max;
+  final int barWidth;
   final Function(int) onValueChanged;
 
   const MovingBarWidget({
@@ -60,7 +60,7 @@ class _MovingBarWidgetState extends State<MovingBarWidget> {
     }
   }
 
-  void _updateBloodPressureCategory(double sp, double dp) {
+  void _updateBloodPressureCategory(int sp, int dp) {
     int newStatus;
     String newCategory;
 
