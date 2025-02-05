@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pressure_flutter/screens/pressure/pressure_list_main.dart';
 import 'package:pressure_flutter/screens/pressure/pressure_main.dart';
+import 'package:pressure_flutter/screens/setting/setting_main.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -72,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         const PressureMain(),
                         const PressureListMain(),
-                        Center(child: Text('Content for Tab 3')),
+                        const SettingMain(),
                       ],
                     ),
                   ),

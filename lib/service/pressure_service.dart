@@ -1,6 +1,12 @@
 import 'dart:io';
 import 'dart:convert';
+import 'package:excel/excel.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:mailer/mailer.dart';
+import 'package:mailer/smtp_server.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 import '../model/pressure_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -32,10 +38,23 @@ class PressureService {
       }
 
       // 기존 데이터의 마지막 seq 값 찾기
-      int lastSeq = pressureModels.isNotEmpty ? pressureModels.last.seq : 0;
+      int lastSeq =
+          pressureModels.isNotEmpty ? (pressureModels.last.seq ?? 0) : 0;
 
       // 새로운 모델에 seq 값 추가 (기존 seq + 1)
       newModel.seq = lastSeq + 1;
+
+      // saveDate를 현재 날짜 및 시간으로 설정
+      DateTime nowDate = DateTime.now();
+      TimeOfDay nowTime =
+          TimeOfDay.fromDateTime(DateTime.now().add(Duration(hours: 9)));
+      newModel.saveDate = DateTime(
+        nowDate.year,
+        nowDate.month,
+        nowDate.day,
+        nowTime.hour,
+        nowTime.minute,
+      ).toString();
 
       // 새로운 모델을 리스트에 추가
       pressureModels.add(newModel);

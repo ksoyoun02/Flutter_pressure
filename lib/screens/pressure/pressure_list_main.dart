@@ -54,60 +54,67 @@ class _PressureListMainState extends State<PressureListMain> {
     }
 
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: _pressureList
-                .map(
-                  (pressure) => Row(
-                    children: [
-                      // 왼쪽 20% 영역: 혈압 상태 아이콘
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.2,
-                        alignment: Alignment.center,
-                        child: Container(
-                          width: 60,
-                          height: 60,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color:
-                                colors[pressure.pressureStatus] ?? Colors.grey,
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text("${pressure.systolic}"),
-                              Container(
-                                width: 30, // 밑줄 길이 조정
-                                height: 1.0, // 밑줄 두께
-                                color: Colors.black, // 밑줄 색상
-                                margin:
-                                    EdgeInsets.symmetric(vertical: 1), // 위아래 여백
+      body: _pressureList.isEmpty
+          ? Center(
+              child: Text(
+                "데이터가 없습니다",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            )
+          : SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: _pressureList
+                      .map(
+                        (pressure) => Row(
+                          children: [
+                            // 왼쪽 20% 영역: 혈압 상태 아이콘
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.2,
+                              alignment: Alignment.center,
+                              child: Container(
+                                width: 60,
+                                height: 60,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: colors[pressure.pressureStatus] ??
+                                      Colors.grey,
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text("${pressure.systolic}"),
+                                    Container(
+                                      width: 30, // 밑줄 길이 조정
+                                      height: 1.0, // 밑줄 두께
+                                      color: Colors.black, // 밑줄 색상
+                                      margin: EdgeInsets.symmetric(
+                                          vertical: 1), // 위아래 여백
+                                    ),
+                                    Text("${pressure.diastolic}"),
+                                  ],
+                                ),
                               ),
-                              Text("${pressure.diastolic}"),
-                            ],
-                          ),
+                            ),
+                            // 오른쪽 80% 영역: 날짜, 시간, 혈압 수치, 맥박 정보
+                            Expanded(
+                              child: ListTile(
+                                title: Text(
+                                  statusText[pressure.pressureStatus]!,
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                subtitle: Text(
+                                    "${formatDate(pressure.date)} / ${pressure.pulse} BPM"),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      // 오른쪽 80% 영역: 날짜, 시간, 혈압 수치, 맥박 정보
-                      Expanded(
-                        child: ListTile(
-                          title: Text(
-                            statusText[pressure.pressureStatus]!,
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          subtitle: Text(
-                              "${formatDate(pressure.date)} / ${pressure.pulse} BPM"),
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-                .toList(),
-          ),
-        ),
-      ),
+                      )
+                      .toList(),
+                ),
+              ),
+            ),
     );
   }
 }
