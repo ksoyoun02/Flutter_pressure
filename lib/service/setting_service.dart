@@ -88,20 +88,30 @@ class SettingService {
     await Share.shareXFiles([XFile(filePath)], text: '이 파일을 공유합니다.');
   }
 
-  Future<void> saveUserInfo(String name, String email) async {
+  Future<void> saveUserInfo(String name, String email, String phone,
+      String birth, String addr) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('user_name', name);
     await prefs.setString('user_email', email);
+    await prefs.setString('user_phone', phone);
+    await prefs.setString('user_birth', birth);
+    await prefs.setString('user_addr', addr);
   }
 
   Future<Map<String, String?>> getUserInfo() async {
     final prefs = await SharedPreferences.getInstance();
     String? name = prefs.getString('user_name');
     String? email = prefs.getString('user_email');
+    String? phone = prefs.getString('user_phone');
+    String? birth = prefs.getString('user_birth');
+    String? addr = prefs.getString('user_addr');
 
     return {
       'name': name,
       'email': email,
+      'phone': phone,
+      'birth': birth,
+      'addr': addr,
     };
   }
 
@@ -109,5 +119,8 @@ class SettingService {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('user_name');
     await prefs.remove('user_email');
+    await prefs.remove('user_phone');
+    await prefs.remove('user_birth');
+    await prefs.remove('user_addr');
   }
 }

@@ -14,9 +14,9 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedTabIndex = 0;
 
   final List<String> _headerTitles = [
-    'Header for Tab 1',
-    'Header for Tab 2',
-    'Header for Tab 3',
+    '혈압 / 맥박 측정',
+    '혈압 / 맥박 기록',
+    '설정',
   ];
 
   @override
@@ -34,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 _headerTitles[_selectedTabIndex],
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 24,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
