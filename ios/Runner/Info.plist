@@ -45,5 +45,11 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSDocumentDirectory</key>
+	<string>Documents</string>
+	<key>NSApplicationSupportsDocumentTypes</key>
+	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+<string>앱에서 사진을 공유하려면 사진 라이브러리에 접근해야 합니다.</string>
 </dict>
 </plist>

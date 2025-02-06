@@ -22,13 +22,13 @@ class PressureSave extends StatefulWidget {
 
 class _PressureSaveState extends State<PressureSave> {
   DateTime _selectedDate = DateTime.now();
-  TimeOfDay _selectedTime = TimeOfDay.fromDateTime(
-      DateTime.now().add(Duration(hours: 9))); // 한국 시간으로 초기화
+  TimeOfDay _selectedTime =
+      TimeOfDay.fromDateTime(DateTime.now()); // 한국 시간으로 초기화
   final pressureService = PressureService();
 
   // 한국 표준시로 시간을 가져오는 함수
   TimeOfDay getKoreanTime() {
-    DateTime koreanTime = DateTime.now().add(Duration(hours: 9)); // 한국 표준시
+    DateTime koreanTime = DateTime.now(); // 한국 표준시
     return TimeOfDay.fromDateTime(koreanTime);
   }
 
@@ -84,9 +84,12 @@ class _PressureSaveState extends State<PressureSave> {
     // 결과에 따라 SnackBar 표시
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(
-          result == "success" ? "저장이 완료되었습니다." : "저장에 실패했습니다.",
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+        content: Align(
+          alignment: Alignment.center, // 가운데 정렬
+          child: Text(
+            result == "success" ? "저장이 완료되었습니다." : "저장에 실패했습니다.",
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+          ),
         ),
         backgroundColor: Colors.black.withOpacity(0.7), // 불투명도 적용
         duration: Duration(seconds: 2), // 2초 후 자동으로 사라짐

@@ -11,7 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SettingService {
   final PressureService pressureService = PressureService();
 
-  Future<void> sendEmail() async {
+  Future<String> sendEmail(String email) async {
     String username = 'devsoyeon02@gmail.com';
     String password = 'kupp cslb tfad ydje';
 
@@ -25,7 +25,7 @@ class SettingService {
 
     final message = Message()
       ..from = Address(username, 'Your Name') // 보내는 사람 이름 설정 가능
-      ..recipients.add('sy@wepl.io') // 받는 사람 이메일
+      ..recipients.add(email) // 받는 사람 이메일
       ..subject = 'Flutter에서 보낸 이메일'
       ..text = '이것은 Flutter에서 보내는 테스트 이메일입니다.'
       ..html = '<h1>Flutter 이메일 전송</h1><p>SMTP를 사용한 이메일입니다.</p>'
@@ -34,8 +34,10 @@ class SettingService {
     try {
       final sendReport = await send(message, smtpServer);
       print('Email sent: ${sendReport.toString()}');
+      return "success";
     } catch (e) {
       print('Email sending failed: $e');
+      return "fail";
     }
   }
 
@@ -83,6 +85,8 @@ class SettingService {
   }
 
   void shareFile() async {
+    await createExcelFile();
+
     var directory = await getApplicationDocumentsDirectory();
     String filePath = '${directory.path}/pressureExcel.xlsx'; // 공유할 파일 경로
     await Share.shareXFiles([XFile(filePath)], text: '이 파일을 공유합니다.');

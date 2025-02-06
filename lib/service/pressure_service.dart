@@ -46,8 +46,7 @@ class PressureService {
 
       // saveDate를 현재 날짜 및 시간으로 설정
       DateTime nowDate = DateTime.now();
-      TimeOfDay nowTime =
-          TimeOfDay.fromDateTime(DateTime.now().add(Duration(hours: 9)));
+      TimeOfDay nowTime = TimeOfDay.fromDateTime(DateTime.now());
       newModel.saveDate = DateTime(
         nowDate.year,
         nowDate.month,
@@ -93,14 +92,6 @@ class PressureService {
       print("파일 읽기 오류: $e");
     }
     return []; // 데이터가 없으면 빈 리스트 반환
-  }
-
-  // 📌 전체 데이터 삭제
-  Future<void> clearAllData() async {
-    final file = await _getFile();
-    if (await file.exists()) {
-      await file.delete();
-    }
   }
 
   // 파일 자체 삭제

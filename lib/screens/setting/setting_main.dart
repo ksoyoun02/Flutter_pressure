@@ -131,8 +131,8 @@ class _SettingMainState extends State<SettingMain> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton(
-                    onPressed: () {
-                      settingService.clearUserInfo(); // 입력값 초기화
+                    onPressed: () async {
+                      await settingService.clearUserInfo(); // 입력값 초기화
                       Navigator.pop(context, true);
                     },
                     style:
@@ -165,8 +165,34 @@ class _SettingMainState extends State<SettingMain> {
     });
   }
 
-  Future<void> sendEmail() async {
-    await settingService.sendEmail();
+  Future<void> sendEmail(String email) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // 배경을 눌러도 닫히지 않도록 설정
+      builder: (context) {
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+    String result = await settingService.sendEmail(email);
+
+    // 결과에 따라 SnackBar 표시
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Align(
+          alignment: Alignment.center,
+          child: Text(
+            result == "success" ? "메일 전송이 완료되었습니다." : "전송에 실패했습니다.",
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+          ),
+        ),
+        backgroundColor: Colors.black.withOpacity(0.7), // 불투명도 적용
+        duration: Duration(seconds: 2), // 2초 후 자동으로 사라짐
+      ),
+    );
+    // 이메일 전송 완료 후 다이얼로그 닫기
+    Navigator.pop(context);
   }
 
   void shareFile() {
@@ -214,7 +240,7 @@ class _SettingMainState extends State<SettingMain> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -241,7 +267,27 @@ class _SettingMainState extends State<SettingMain> {
                 SizedBox(width: 12),
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: () => sendEmail(),
+                    onPressed: () {
+                      if (emailController.text.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                "이메일을 입력해주세요.",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                            backgroundColor: Colors.red, // 알림 배경 색상
+                            duration: Duration(seconds: 2), // 2초 동안 표시
+                          ),
+                        );
+                        return; // 이메일이 비어있으면 함수 실행을 중단
+                      }
+                      sendEmail(emailController.text); // 이메일 전송
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color.fromARGB(255, 117, 160, 253),
                       padding: EdgeInsets.symmetric(vertical: 14),
