@@ -1,5 +1,5 @@
 class PressureModel {
-  int? seq;
+  int? seq; // null 허용
   int systolic;
   int diastolic;
   int pulse;

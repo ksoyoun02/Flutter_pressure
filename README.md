@@ -4,4 +4,4 @@ flutter run
 
 # apk 배포방법
 flutter build apk --release
-build/app/outputs/flutter-apk/app-release.apk 설치치
+build/app/outputs/flutter-apk/app-release.apk 설치
