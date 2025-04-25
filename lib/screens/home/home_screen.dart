@@ -70,6 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   // Tab Content
                   Expanded(
                     child: TabBarView(
+                      physics: const NeverScrollableScrollPhysics(),
                       children: [
                         const PressureMain(),
                         const PressureListMain(),

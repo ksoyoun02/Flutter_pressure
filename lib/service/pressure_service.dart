@@ -94,8 +94,31 @@ class PressureService {
     return []; // 데이터가 없으면 빈 리스트 반환
   }
 
+// 파일 자체 삭제
+  Future<void> deleteFile(PressureModel newModel) async {
+    print(newModel.seq);
+    try {
+      final file = await _getFile();
+      if (await file.exists()) {
+        final contents = await file.readAsString();
+        final List<dynamic> data = jsonDecode(contents);
+
+        // seq에 해당하는 항목 제거
+        data.removeWhere((item) => item['seq'] == newModel.seq);
+
+        // 다시 저장
+        await file.writeAsString(jsonEncode(data));
+        print('파일이 삭제되었습니다. ${newModel.seq}');
+      } else {
+        print('파일이 존재하지 않습니다.');
+      }
+    } catch (e) {
+      print('파일 삭제 오류: $e');
+    }
+  }
+
   // 파일 자체 삭제
-  Future<void> deleteFile() async {
+  Future<void> deleteFiles() async {
     try {
       final file = await _getFile();
       if (await file.exists()) {
