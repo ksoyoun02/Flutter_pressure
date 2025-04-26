@@ -11,8 +11,6 @@ import '../model/pressure_model.dart';
 import 'package:http/http.dart' as http;
 
 class PressureService {
-  final String apiUrl = 'http://10.0.2.2:8080/calendar'; // API URL
-
   Future<File> _getFile() async {
     final directory = await getApplicationDocumentsDirectory();
     return File('${directory.path}/pressure_data.json');
